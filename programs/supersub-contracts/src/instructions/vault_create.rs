@@ -21,7 +21,7 @@ pub struct VaultCreate<'info> {
 }
 
 impl<'info> VaultCreate<'info> {
-    pub fn vault_create(ctx: Context<Self>, init_balance: u64) -> Result<()> {
+    pub fn perform_create(ctx: Context<Self>, init_balance: u64) -> Result<()> {
         let vault = &mut ctx.accounts.vault;
         vault.set_inner(Vault {
             owner: ctx.accounts.owner.key(),
