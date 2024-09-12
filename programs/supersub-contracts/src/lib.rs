@@ -22,4 +22,8 @@ pub mod supersub_contracts {
     pub fn vault_withdraw_token(ctx: Context<VaultWithdrawToken>, amount: u64) -> Result<()> {
         VaultWithdrawToken::perform_withdraw(ctx, amount)
     }
+
+    pub fn service_create(ctx: Context<ServiceCreate>, id: u64, plan_infos: Vec<PlanInfo>) -> Result<()> {
+        ServiceCreate::perform_create(ctx, id, plan_infos)
+    }
 }

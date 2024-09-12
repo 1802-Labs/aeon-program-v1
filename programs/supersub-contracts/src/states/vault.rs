@@ -7,5 +7,5 @@ pub struct Vault {
 }
 
 impl Vault {
-    pub const INIT_SPACE: usize = 32 + 8;
+    pub const INIT_SPACE: usize = 32 + 1;
 }
