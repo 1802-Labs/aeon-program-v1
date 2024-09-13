@@ -5,7 +5,8 @@ pub struct Plan {
     pub id: u64,
     pub charge_amount: u64,
     pub created_at: u64,
-    pub token_mint: Pubkey,
+    pub interval: u64,
+    pub token_mint: Option<Pubkey>,
     pub recipient: Pubkey,
     pub is_active: bool
 }

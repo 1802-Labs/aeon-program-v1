@@ -10,7 +10,8 @@ use crate::errors::Error;
 #[derive(AnchorDeserialize, AnchorSerialize)]
 pub struct PlanInfo {
     pub charge_amount: u64,
-    pub token_mint: Pubkey,
+    pub interval: u64,
+    pub token_mint: Option<Pubkey>,
     // Should be a normal account/owner_vault
     // if the mint is WSOL else, it should be a
     // token account
@@ -25,7 +26,6 @@ pub struct ServiceCreate<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
     #[account(
-        mut,
         seeds = [SEED_PREFIX, VAULT_SEED, owner.key().as_ref()],
         bump = vault.bump
     )]
@@ -34,7 +34,7 @@ pub struct ServiceCreate<'info> {
         init,
         payer = fee_payer,
         space = 8 + Service::size(plan_infos.len()),
-        seeds = [SEED_PREFIX, SERVICE_SEED, owner.key().as_ref(), &id.to_be_bytes()],
+        seeds = [SEED_PREFIX, SERVICE_SEED, owner.key().as_ref(), &id.to_le_bytes()],
         bump
     )]
     pub service: Account<'info, Service>,
@@ -47,17 +47,19 @@ impl<'info> ServiceCreate<'info> {
             return err!(Error::InvalidArgument)
         }
         let mut plans: Vec<Plan> = Vec::with_capacity(plan_infos.len());
-        let current_id: u64 = 1;
+        let mut current_id: u64 = 1;
         for info in plan_infos {
             let plan = Plan {
                 id: current_id,
                 charge_amount: info.charge_amount,
+                interval: info.interval,
                 created_at: Clock::get()?.unix_timestamp as u64,
                 token_mint: info.token_mint,
                 recipient: info.recipient,
                 is_active: true
             };
             plans.push(plan);
+            current_id += 1;
         }
         let service = Service {
             id,
@@ -71,3 +73,18 @@ impl<'info> ServiceCreate<'info> {
         Ok(())
     }
 }
+
+// #[derive(Accounts)]
+// #[instruction(id: u64)]
+// pub struct PlanAdd<'info> {
+//     #[account(mut)]
+//     pub fee_payer: Signer<'info>,
+//     #[account(mut)]
+//     pub owner: Signer<'info>,
+//     #[account(
+//         mut,
+//         seeds = [SEED_PREFIX, SERVICE_SEED, owner.key().as_ref(), &id.to_be_bytes()],
+//         bump = service.bump
+//     )]
+//     pub service: Account<'info, Service>
+// }
