@@ -7,5 +7,7 @@ pub enum Error {
     #[msg("The specified vault token account is not owned by the owner vault")]
     ATANotOwnedByVault,
     #[msg("Invalid argument")]
-    InvalidArgument
+    InvalidArgument,
+    #[msg("Plan not found")]
+    PlanNotFound
 }

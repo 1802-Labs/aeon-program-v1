@@ -30,4 +30,12 @@ pub mod supersub_contracts {
     pub fn service_status_update(ctx: Context<ServiceStatusUpdate>, id: u64, is_active: bool) -> Result<()> {
         ServiceStatusUpdate::perform_update(ctx, id, is_active)
     }
+
+    pub fn plan_status_update(ctx: Context<PlanStatusUpdate>, service_id: u64, plan_id: u64, is_active: bool) -> Result<()> {
+        PlanStatusUpdate::perform_update(ctx, service_id, plan_id, is_active)
+    }
+
+    pub fn plan_add(ctx: Context<PlanAdd>, service_id: u64, plan_info: PlanInfo) -> Result<()> {
+        PlanAdd::perform_add(ctx, service_id, plan_info)
+    }
 }

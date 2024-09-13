@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use solana_program::system_instruction;
 
 use crate::states::{vault::Vault, seeds::{SEED_PREFIX, VAULT_SEED}};
 
@@ -28,7 +27,7 @@ impl<'info> VaultCreate<'info> {
             bump: ctx.bumps.vault
         });
         if init_balance > 0 {
-            let transfer_ix = system_instruction::transfer(
+            let transfer_ix = solana_program::system_instruction::transfer(
                 &ctx.accounts.owner.key(),
                 &ctx.accounts.vault.key(),
                 init_balance

@@ -28,6 +28,6 @@ impl Service {
         32 + // created_by
         2  + // status and bump
         4  + // plans vector length
-        (plan_count * Plan::INIT_SPACE) // plans
+        (plan_count * (Plan::INIT_SPACE + 8)) // plans
     }
 }

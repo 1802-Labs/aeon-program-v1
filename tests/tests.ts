@@ -458,11 +458,44 @@ describe("Aeon-contract-tests", () => {
     })
 
     it("owner can deactivate plan", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: serviceProvider.publicKey,
+        service
+      }
+      const sig = await program.methods.planStatusUpdate(new anchor.BN(1), new anchor.BN(2), false)
+        .accounts({...accounts})
+        .signers([serviceProvider])
+        .rpc();
+      await confirm(sig);
+      const serviceInfo = await program.account.service.fetch(service);
+      const plan = serviceInfo.plans.filter(p=>p.id.toNumber() == 2);
+      expect(plan[0].isActive).to.equals(false);
     })
 
     it("owner can add new plan", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: serviceProvider.publicKey,
+        service
+      }
+      const planInfo = {
+        chargeAmount: new anchor.BN(20 * web3.LAMPORTS_PER_SOL),
+        interval: new anchor.BN(10000), // 10000 seconds,
+        tokenMint: null, // represents sol,
+        recipient: tokenMinter.publicKey
+      }
+      const sig = await program.methods.planAdd(new anchor.BN(1), planInfo)
+        .accounts({...accounts})
+        .signers([serviceProvider])
+        .rpc();
+      await confirm(sig);
+      const serviceInfo = await program.account.service.fetch(service);
+      const plan = serviceInfo.plans.filter(p=>p.id.toNumber() == 3);
+      expect(plan[0].chargeAmount.toString()).to.equals(planInfo.chargeAmount.toString());
+      expect(plan[0].interval.toString()).to.equals(planInfo.interval.toString());
+      expect(plan[0].recipient.toString()).to.equals(planInfo.recipient.toString());
+      expect(plan[0].tokenMint).to.equals(planInfo.tokenMint);
     })
 
     it("cannot deactivate service if not owner", async () => {
@@ -472,7 +505,7 @@ describe("Aeon-contract-tests", () => {
         service
       }
       try {
-        const sig = await program.methods.serviceStatusUpdate(new anchor.BN(1), false)
+        await program.methods.serviceStatusUpdate(new anchor.BN(1), false)
           .accounts({...accounts})
           .signers([user1Wallet])
           .rpc();
@@ -483,13 +516,43 @@ describe("Aeon-contract-tests", () => {
     })
 
     it("cannot deactivate plan if not owner", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: user1Wallet.publicKey,
+        service
+      }
+      try {
+        await program.methods.planStatusUpdate(new anchor.BN(1), new anchor.BN(1), false)
+          .accounts({...accounts})
+          .signers([user1Wallet])
+          .rpc();
+          assert.ok(false)
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorMessage).to.equals("A seeds constraint was violated")
+      }
     })
 
     it("cannot add new plan if not owner", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: user1Wallet.publicKey,
+        service
+      }
+      const planInfo = {
+        chargeAmount: new anchor.BN(20 * web3.LAMPORTS_PER_SOL),
+        interval: new anchor.BN(10000), // 10000 seconds,
+        tokenMint: null, // represents sol,
+        recipient: tokenMinter.publicKey
+      }
+      try {
+        await program.methods.planAdd(new anchor.BN(1), planInfo)
+          .accounts({...accounts})
+          .signers([user1Wallet])
+          .rpc();
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorMessage).to.equals("A seeds constraint was violated")
+      }
     })
-
   })
 
   describe("Subscription Test", () => {
