@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { web3 } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { SupersubContracts } from "../target/types/supersub_contracts";
+import { SupersubContracts } from "../target/types/";
 import { assert, expect } from "chai";
 import { confirm, createVault, createService } from './utils';
 

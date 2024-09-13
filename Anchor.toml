@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-supersub_contracts = "6LvWxo7kqwNFQzWAFqRJHkwLriPj6x5wnNNMvCm8GX9"
+aeon_program_v1 = "6LvWxo7kqwNFQzWAFqRJHkwLriPj6x5wnNNMvCm8GX9"
 
 [registry]
 url = "https://api.apr.dev"

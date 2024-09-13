@@ -1,12 +1,12 @@
 [package]
-name = "supersub-contracts"
+name = "aeon-program-v1"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "supersub_contracts"
+name = "aeon_program_v1"
 
 [features]
 default = []
