@@ -443,7 +443,18 @@ describe("Aeon-contract-tests", () => {
     })
 
     it("owner can deactivate service", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: serviceProvider.publicKey,
+        service
+      }
+      const sig = await program.methods.serviceStatusUpdate(new anchor.BN(1), false)
+        .accounts({...accounts})
+        .signers([serviceProvider])
+        .rpc();
+      await confirm(sig);
+      const serviceInfo = await program.account.service.fetch(service);
+      expect(serviceInfo.isActive).to.equals(false)
     })
 
     it("owner can deactivate plan", async () => {
@@ -455,7 +466,20 @@ describe("Aeon-contract-tests", () => {
     })
 
     it("cannot deactivate service if not owner", async () => {
-
+      const accounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: user1Wallet.publicKey,
+        service
+      }
+      try {
+        const sig = await program.methods.serviceStatusUpdate(new anchor.BN(1), false)
+          .accounts({...accounts})
+          .signers([user1Wallet])
+          .rpc();
+          assert.ok(false)
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorMessage).to.equals("A seeds constraint was violated")
+      }
     })
 
     it("cannot deactivate plan if not owner", async () => {

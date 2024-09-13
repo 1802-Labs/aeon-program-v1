@@ -26,4 +26,8 @@ pub mod supersub_contracts {
     pub fn service_create(ctx: Context<ServiceCreate>, id: u64, plan_infos: Vec<PlanInfo>) -> Result<()> {
         ServiceCreate::perform_create(ctx, id, plan_infos)
     }
+
+    pub fn service_status_update(ctx: Context<ServiceStatusUpdate>, id: u64, is_active: bool) -> Result<()> {
+        ServiceStatusUpdate::perform_update(ctx, id, is_active)
+    }
 }
