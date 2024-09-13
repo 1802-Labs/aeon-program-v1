@@ -8,7 +8,7 @@ use anchor_lang::prelude::*;
 declare_id!("6LvWxo7kqwNFQzWAFqRJHkwLriPj6x5wnNNMvCm8GX9");
 
 #[program]
-pub mod supersub_contracts {
+pub mod aeon_program {
     use super::*;
 
     pub fn vault_create(ctx: Context<VaultCreate>, init_balance: u64) -> Result<()> {

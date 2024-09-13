@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { web3 } from "@coral-xyz/anchor";
-import { SupersubContracts } from "../target/types/supersub_contracts";
+import { AeonProgram } from "../target/types/aeon_program";
 import {
   getAssociatedTokenAddress,
   getOrCreateAssociatedTokenAccount,
@@ -71,7 +71,7 @@ export const transferTokenToVault = async (
 
 export const createVault = async (
   connection: web3.Connection,
-  program: anchor.Program<SupersubContracts>,
+  program: anchor.Program<AeonProgram>,
   owner: web3.Keypair,
   vaultKey: web3.PublicKey,
   initAmount: number
@@ -91,7 +91,7 @@ export const createVault = async (
 
 export const createService = async (
   connection: web3.Connection,
-  program: anchor.Program<SupersubContracts>,
+  program: anchor.Program<AeonProgram>,
   owner: web3.Keypair,
   vaultKey: web3.PublicKey,
   serviceKey: web3.PublicKey,

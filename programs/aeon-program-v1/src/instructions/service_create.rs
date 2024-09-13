@@ -73,18 +73,3 @@ impl<'info> ServiceCreate<'info> {
         Ok(())
     }
 }
-
-// #[derive(Accounts)]
-// #[instruction(id: u64)]
-// pub struct PlanAdd<'info> {
-//     #[account(mut)]
-//     pub fee_payer: Signer<'info>,
-//     #[account(mut)]
-//     pub owner: Signer<'info>,
-//     #[account(
-//         mut,
-//         seeds = [SEED_PREFIX, SERVICE_SEED, owner.key().as_ref(), &id.to_be_bytes()],
-//         bump = service.bump
-//     )]
-//     pub service: Account<'info, Service>
-// }

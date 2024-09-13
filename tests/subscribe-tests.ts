@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { web3 } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { SupersubContracts } from "../target/types/supersub_contracts";
+import { AeonProgram } from "../target/types/aeon_program";
 import { assert, expect } from "chai";
 import { confirm, createService, createVault, transferSOLToVault, transferTokenToVault } from "./utils";
 
@@ -9,7 +9,7 @@ describe("Aeon-contract-tests", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const connection = anchor.getProvider().connection;
   const program = anchor.workspace
-    .SupersubContracts as Program<SupersubContracts>;
+    .AeonProgram as Program<AeonProgram>;
   const user1Wallet = new web3.Keypair();
   const user2Wallet = new web3.Keypair();
   const serviceProvider = new web3.Keypair();
