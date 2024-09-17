@@ -38,4 +38,8 @@ pub mod aeon_program {
     pub fn plan_add(ctx: Context<PlanAdd>, service_id: u64, plan_info: PlanInfo) -> Result<()> {
         PlanAdd::perform_add(ctx, service_id, plan_info)
     }
+
+    pub fn subscribe_sol(ctx: Context<SubscribeSOL>, service_id: u64, plan_id: u64) -> Result<()> {
+        SubscribeSOL::perform_subscribe(ctx, service_id, plan_id)
+    }
 }

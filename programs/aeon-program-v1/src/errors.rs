@@ -9,5 +9,13 @@ pub enum Error {
     #[msg("Invalid argument")]
     InvalidArgument,
     #[msg("Plan not found")]
-    PlanNotFound
+    PlanNotFound,
+    #[msg("Service is not active")]
+    InactiveService,
+    #[msg("Plan is not active")]
+    InactivePlan,
+    #[msg("Insufficient balance for subscription")]
+    InsufficientVaultBalance,
+    #[msg("Operation not allowed")]
+    OperationNotAllowed
 }
