@@ -842,6 +842,20 @@ describe("Subscription Tests", () => {
       }
     })
   })
+
+  // describe("SOL charge tests", () => {
+  //   it("should charge when period has elapsed", async () => {
+
+  //   })
+
+  //   it("should not charge before period elapses", async () => {
+
+  //   })
+  // })
+
+  // describe("Token charge tests", () => {
+
+  // })
   
 
   // Need a service with two plans (plan 1 in sol, plan 2 in another token created)
