@@ -1,6 +1,7 @@
 mod states;
 mod instructions;
 mod errors;
+mod utils;
 
 use instructions::*;
 use anchor_lang::prelude::*;
@@ -41,5 +42,9 @@ pub mod aeon_program {
 
     pub fn subscribe_sol(ctx: Context<SubscribeSOL>, service_id: u64, plan_id: u64) -> Result<()> {
         SubscribeSOL::perform_subscribe(ctx, service_id, plan_id)
+    }
+
+    pub fn subscribe_token(ctx: Context<SubscribeToken>, service_id: u64, plan_id: u64) -> Result<()> {
+        SubscribeToken::perform_subscribe(ctx, service_id, plan_id)
     }
 }

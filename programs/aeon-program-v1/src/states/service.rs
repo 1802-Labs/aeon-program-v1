@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
 
+use crate::errors::Error;
+
 #[derive(AnchorDeserialize, AnchorSerialize, InitSpace, PartialEq, Eq, Clone)]
 pub struct Plan {
     pub id: u64,
@@ -29,5 +31,13 @@ impl Service {
         2  + // status and bump
         4  + // plans vector length
         (plan_count * (Plan::INIT_SPACE + 8)) // plans
+    }
+
+    pub fn get_plan(&self, plan_id: u64) -> Result<&Plan> {
+        let plan = self.plans.iter().find(|p| p.id == plan_id);
+        match plan {
+            Some(plan) => Ok(plan),
+            None => err!(Error::PlanNotFound)
+        }
     }
 }

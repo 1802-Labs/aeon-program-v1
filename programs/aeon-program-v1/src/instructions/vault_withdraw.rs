@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{token::{self, Token, TransferChecked}, token_interface::{Mint, TokenAccount}};
+use anchor_spl::{token::Token, token_interface::{Mint, TokenAccount}};
 
 use crate::states::{vault::Vault, seeds::{SEED_PREFIX, VAULT_SEED}};
+use crate::utils::*;
 use crate::errors::Error;
 
 #[derive(Accounts)]
@@ -60,23 +61,17 @@ pub struct VaultWithdrawToken<'info> {
 
 impl<'info> VaultWithdrawToken<'info> {
     pub fn perform_withdraw(ctx: Context<Self>, amount: u64) -> Result<()> {
-        let accounts = TransferChecked {
-            from: ctx.accounts.vault_ata.to_account_info(),
-            to: ctx.accounts.destination_ata.to_account_info(),
-            authority: ctx.accounts.vault.to_account_info(),
-            mint: ctx.accounts.token_mint.to_account_info()
-        };
         let owner = ctx.accounts.owner.key();
-        let signer: &[&[&[u8]]] = &[&[SEED_PREFIX, VAULT_SEED, owner.as_ref(), &[ctx.accounts.vault.bump]]];
-        token::transfer_checked(
-            CpiContext::new_with_signer(
-                ctx.accounts.token_program.to_account_info(), 
-                accounts,
-                signer
-            ), 
-            amount,
-            ctx.accounts.token_mint.decimals
-        )?;
-        Ok(())
+        let signer_seeds: &[&[&[u8]]] = &[&[SEED_PREFIX, VAULT_SEED, owner.as_ref(), &[ctx.accounts.vault.bump]]];
+        perform_token_transfer(
+            ctx.accounts.vault_ata.to_account_info(), 
+            ctx.accounts.destination_ata.to_account_info(), 
+            ctx.accounts.vault.to_account_info(), 
+            ctx.accounts.token_mint.to_account_info(), 
+            ctx.accounts.token_program.to_account_info(), 
+            amount, 
+            ctx.accounts.token_mint.decimals, 
+            signer_seeds
+        )
     }
 }
