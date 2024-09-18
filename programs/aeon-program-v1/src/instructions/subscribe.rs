@@ -131,6 +131,7 @@ impl<'info> SubscribeToken<'info> {
             ctx.accounts.token_mint.decimals, 
             signer_seeds
         )?;
+        subscription.plan_id = plan.id;
         subscription.is_active = true;
         subscription.service_key = service.key();
         subscription.owner = ctx.accounts.subscriber.key();
