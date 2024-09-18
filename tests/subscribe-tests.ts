@@ -30,15 +30,6 @@ describe("Subscription Tests", () => {
     Buffer.from("vault"),
     subscriberWallet.publicKey.toBuffer()
   ], program.programId)
-  const [service] = web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("aeon"),
-      Buffer.from("service"),
-      serviceProvider.publicKey.toBuffer(),
-      new anchor.BN(1).toBuffer("le", 8),
-    ],
-    program.programId
-  );
   const providerVaultAta = getAssociatedTokenAddressSync(mintKeyPair.publicKey, serviceProvider.publicKey, true);
   const providerAta = getAssociatedTokenAddressSync(mintKeyPair.publicKey, serviceProvider.publicKey);
   const planInfos = [
@@ -138,258 +129,356 @@ describe("Subscription Tests", () => {
       500,
       tokenDecimals
     )
-    // create service
-    await createService(
-      connection,
-      program,
-      serviceProvider,
-      providerVault,
-      service,
-      1,
-      planInfos
-    )
   });
 
-  it("Can subscribe to sol plan [vault recipient]", async () => {
-    const plan = planInfos[0];
-    const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("subscription"),
-        subscriberWallet.publicKey.toBuffer(),
-        service.toBuffer(),
-      ],
-      program.programId
-    );
-    const accounts = {
-      feePayer,
-      subscriber: subscriberWallet.publicKey,
-      subscriberVault,
-      serviceProvider: serviceProvider.publicKey,
-      service,
-      recipient: plan.recipient,
-      subscription: subscriptionKey
-    };
-    const initialVaultBalance = await connection.getBalance(subscriberVault);
-    const initialRecipientBalance = await connection.getBalance(plan.recipient);
-    const sig = await program.methods.subscribeSol(new anchor.BN(1), new anchor.BN(1))
-      .accounts({...accounts})
-      .signers([subscriberWallet])
-      .rpc();
-    await confirm(connection, sig);
-    const finalVaultBalance = await connection.getBalance(subscriberVault);
-    const finalRecipientBalance = await connection.getBalance(plan.recipient);
-    const subscriptionInfo = await program.account.subscription.fetch(subscriptionKey);
-    expect(initialVaultBalance - finalVaultBalance).to.equals(plan.chargeAmount.toNumber());
-    expect(finalRecipientBalance - initialRecipientBalance).to.equals(plan.chargeAmount.toNumber());
-    expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
-    expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
-    expect(subscriptionInfo.planId.toNumber()).to.equals(1);
-    expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
-    assert.ok(subscriptionInfo.isActive);
-  })
+  describe("SOL Subscription", () => {
+    it("aeon vault recipient subscription test", async () => {
+      // This simulates a service with a plan where the recipient of the
+      // subscription set by the service provider is aeon's vault
 
-  it("Cannot subscribe to sol plan with wrong recipient", async () => {
-    // create service
-    const serviceId = 2;
-    const [service] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("service"),
-        serviceProvider.publicKey.toBuffer(),
-        new anchor.BN(serviceId).toBuffer("le", 8),
-      ],
-      program.programId
-    );
-    const planInfos = [
-      {
-        chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
-        interval: new anchor.BN(3600), // 3600 seconds,
-        tokenMint: null, // represents sol,
-        recipient: providerVault, // recipient is the provider's vault
-      }
-    ]
-    await createService(
-      connection,
-      program,
-      serviceProvider,
-      providerVault,
-      service,
-      serviceId,
-      planInfos
-    )
-    const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("subscription"),
-        subscriberWallet.publicKey.toBuffer(),
-        service.toBuffer(),
-      ],
-      program.programId
-    );
-    const accounts = {
-      feePayer,
-      subscriber: subscriberWallet.publicKey,
-      subscriberVault,
-      serviceProvider: serviceProvider.publicKey,
-      service,
-      recipient: subscriberWallet.publicKey,
-      subscription: subscriptionKey
-    };
-    try {
-      await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+      // create service
+      const serviceId = 1;
+      const [service] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("service"),
+          serviceProvider.publicKey.toBuffer(),
+          new anchor.BN(serviceId).toBuffer("le", 8),
+        ],
+        program.programId
+      );
+      const planInfos = [
+        {
+          chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
+          interval: new anchor.BN(3600), // 3600 seconds,
+          tokenMint: null, // represents sol,
+          recipient: providerVault, // recipient is the provider's vault
+        }
+      ];
+      await createService(
+        connection,
+        program,
+        serviceProvider,
+        providerVault,
+        service,
+        serviceId,
+        planInfos
+      )
+      const plan = planInfos[0];
+      const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("subscription"),
+          subscriberWallet.publicKey.toBuffer(),
+          service.toBuffer(),
+        ],
+        program.programId
+      );
+      const accounts = {
+        feePayer,
+        subscriber: subscriberWallet.publicKey,
+        subscriberVault,
+        serviceProvider: serviceProvider.publicKey,
+        service,
+        recipient: plan.recipient,
+        subscription: subscriptionKey
+      };
+      const initialVaultBalance = await connection.getBalance(subscriberVault);
+      const initialRecipientBalance = await connection.getBalance(plan.recipient);
+      const sig = await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
         .accounts({...accounts})
         .signers([subscriberWallet])
         .rpc();
-      assert.ok(false);
-    } catch (error) {
-      expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
-        "RecipientMismatch"
-      );
-    }
-  })
+      await confirm(connection, sig);
+      const finalVaultBalance = await connection.getBalance(subscriberVault);
+      const finalRecipientBalance = await connection.getBalance(plan.recipient);
+      const subscriptionInfo = await program.account.subscription.fetch(subscriptionKey);
+      expect(initialVaultBalance - finalVaultBalance).to.equals(plan.chargeAmount.toNumber());
+      expect(finalRecipientBalance - initialRecipientBalance).to.equals(plan.chargeAmount.toNumber());
+      expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
+      expect(subscriptionInfo.planId.toNumber()).to.equals(1);
+      expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
+      assert.ok(subscriptionInfo.isActive);
+    })
 
-  it("Cannot subscribe to sol inactive plan", async () => {
-    // create service
-    const serviceId = 3;
-    const [service] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("service"),
-        serviceProvider.publicKey.toBuffer(),
-        new anchor.BN(serviceId).toBuffer("le", 8),
-      ],
-      program.programId
-    );
-    const planInfos = [
-      {
-        chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
-        interval: new anchor.BN(3600), // 3600 seconds,
-        tokenMint: null, // represents sol,
-        recipient: providerVault, // recipient is the provider's vault
-      }
-    ]
-    await createService(
-      connection,
-      program,
-      serviceProvider,
-      providerVault,
-      service,
-      serviceId,
-      planInfos
-    )
-    // deactivate plan
-    const deactivateAccounts = {
-      feePayer: anchor.getProvider().publicKey,
-      owner: serviceProvider.publicKey,
-      service,
-    };
-    const sig = await program.methods.planStatusUpdate(new anchor.BN(serviceId), new anchor.BN(1), false)
-      .accounts({...deactivateAccounts})
-      .signers([serviceProvider])
-      .rpc()
-    await confirm(connection, sig);
-    const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("subscription"),
-        subscriberWallet.publicKey.toBuffer(),
-        service.toBuffer(),
-      ],
-      program.programId
-    );
-    const accounts = {
-      feePayer,
-      subscriber: subscriberWallet.publicKey,
-      subscriberVault,
-      serviceProvider: serviceProvider.publicKey,
-      service,
-      recipient: subscriberWallet.publicKey,
-      subscription: subscriptionKey
-    };
-    try {
-      await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+    it("solana wallet recipient subscription test", async () => {
+      // This simulates a service with a plan where the recipient of the
+      // subscription set by the service provider is a normal solana wallet
+
+      // create service
+      const serviceId = 2;
+      const [service] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("service"),
+          serviceProvider.publicKey.toBuffer(),
+          new anchor.BN(serviceId).toBuffer("le", 8),
+        ],
+        program.programId
+      );
+      const planInfos = [
+        {
+          chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
+          interval: new anchor.BN(3600), // 3600 seconds,
+          tokenMint: null, // represents sol,
+          recipient: serviceProvider.publicKey, // recipient is the provider's solana wallet
+        }
+      ];
+      await createService(
+        connection,
+        program,
+        serviceProvider,
+        providerVault,
+        service,
+        serviceId,
+        planInfos
+      )
+      const plan = planInfos[0];
+      const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("subscription"),
+          subscriberWallet.publicKey.toBuffer(),
+          service.toBuffer(),
+        ],
+        program.programId
+      );
+      const accounts = {
+        feePayer,
+        subscriber: subscriberWallet.publicKey,
+        subscriberVault,
+        serviceProvider: serviceProvider.publicKey,
+        service,
+        recipient: plan.recipient,
+        subscription: subscriptionKey
+      };
+      const initialVaultBalance = await connection.getBalance(subscriberVault);
+      const initialRecipientBalance = await connection.getBalance(plan.recipient);
+      const sig = await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
         .accounts({...accounts})
         .signers([subscriberWallet])
         .rpc();
-      assert.ok(false);
-    } catch (error) {
-      expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
-        "InactivePlan"
-      );
-    }
-  })
+      await confirm(connection, sig);
+      const finalVaultBalance = await connection.getBalance(subscriberVault);
+      const finalRecipientBalance = await connection.getBalance(plan.recipient);
+      const subscriptionInfo = await program.account.subscription.fetch(subscriptionKey);
+      expect(initialVaultBalance - finalVaultBalance).to.equals(plan.chargeAmount.toNumber());
+      expect(finalRecipientBalance - initialRecipientBalance).to.equals(plan.chargeAmount.toNumber());
+      expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
+      expect(subscriptionInfo.planId.toNumber()).to.equals(1);
+      expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
+      assert.ok(subscriptionInfo.isActive);
+    })
+  
+    it("Cannot subscribe to sol plan with wrong recipient", async () => {
+      // a malicious subscriber might want to specify a recipient other than the
+      // one specified in the plan details. We should be able to prevent specifying the
+      // wrong recipient account
 
-  it("Cannot subscribe to sol inactive service", async () => {
-    // create service
-    const serviceId = 4;
-    const [service] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("service"),
-        serviceProvider.publicKey.toBuffer(),
-        new anchor.BN(serviceId).toBuffer("le", 8),
-      ],
-      program.programId
-    );
-    const planInfos = [
-      {
-        chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
-        interval: new anchor.BN(3600), // 3600 seconds,
-        tokenMint: null, // represents sol,
-        recipient: providerVault, // recipient is the provider's vault
-      }
-    ]
-    await createService(
-      connection,
-      program,
-      serviceProvider,
-      providerVault,
-      service,
-      serviceId,
-      planInfos
-    )
-    // deactivate service
-    const deactivateAccounts = {
-      feePayer: anchor.getProvider().publicKey,
-      owner: serviceProvider.publicKey,
-      service,
-    };
-    const sig = await program.methods.serviceStatusUpdate(new anchor.BN(serviceId), false)
-      .accounts({...deactivateAccounts})
-      .signers([serviceProvider])
-      .rpc()
-    await confirm(connection, sig);
-    const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("aeon"),
-        Buffer.from("subscription"),
-        subscriberWallet.publicKey.toBuffer(),
-        service.toBuffer(),
-      ],
-      program.programId
-    );
-    const accounts = {
-      feePayer,
-      subscriber: subscriberWallet.publicKey,
-      subscriberVault,
-      serviceProvider: serviceProvider.publicKey,
-      service,
-      recipient: subscriberWallet.publicKey,
-      subscription: subscriptionKey
-    };
-    try {
-      await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
-        .accounts({...accounts})
-        .signers([subscriberWallet])
-        .rpc();
-      assert.ok(false);
-    } catch (error) {
-      expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
-        "InactiveService"
+      // create service
+      const serviceId = 3;
+      const [service] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("service"),
+          serviceProvider.publicKey.toBuffer(),
+          new anchor.BN(serviceId).toBuffer("le", 8),
+        ],
+        program.programId
       );
-    }
+      const planInfos = [
+        {
+          chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
+          interval: new anchor.BN(3600), // 3600 seconds,
+          tokenMint: null, // represents sol,
+          recipient: providerVault, // recipient is the provider's vault
+        }
+      ]
+      await createService(
+        connection,
+        program,
+        serviceProvider,
+        providerVault,
+        service,
+        serviceId,
+        planInfos
+      )
+      const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("subscription"),
+          subscriberWallet.publicKey.toBuffer(),
+          service.toBuffer(),
+        ],
+        program.programId
+      );
+      const accounts = {
+        feePayer,
+        subscriber: subscriberWallet.publicKey,
+        subscriberVault,
+        serviceProvider: serviceProvider.publicKey,
+        service,
+        recipient: subscriberWallet.publicKey,
+        subscription: subscriptionKey
+      };
+      try {
+        await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+          .accounts({...accounts})
+          .signers([subscriberWallet])
+          .rpc();
+        assert.ok(false);
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
+          "RecipientMismatch"
+        );
+      }
+    })
+  
+    it("Cannot subscribe to sol inactive plan", async () => {
+      // create service
+      const serviceId = 4;
+      const [service] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("service"),
+          serviceProvider.publicKey.toBuffer(),
+          new anchor.BN(serviceId).toBuffer("le", 8),
+        ],
+        program.programId
+      );
+      const planInfos = [
+        {
+          chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
+          interval: new anchor.BN(3600), // 3600 seconds,
+          tokenMint: null, // represents sol,
+          recipient: providerVault, // recipient is the provider's vault
+        }
+      ]
+      await createService(
+        connection,
+        program,
+        serviceProvider,
+        providerVault,
+        service,
+        serviceId,
+        planInfos
+      )
+      // deactivate plan
+      const deactivateAccounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: serviceProvider.publicKey,
+        service,
+      };
+      const sig = await program.methods.planStatusUpdate(new anchor.BN(serviceId), new anchor.BN(1), false)
+        .accounts({...deactivateAccounts})
+        .signers([serviceProvider])
+        .rpc()
+      await confirm(connection, sig);
+      const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("subscription"),
+          subscriberWallet.publicKey.toBuffer(),
+          service.toBuffer(),
+        ],
+        program.programId
+      );
+      const accounts = {
+        feePayer,
+        subscriber: subscriberWallet.publicKey,
+        subscriberVault,
+        serviceProvider: serviceProvider.publicKey,
+        service,
+        recipient: subscriberWallet.publicKey,
+        subscription: subscriptionKey
+      };
+      try {
+        await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+          .accounts({...accounts})
+          .signers([subscriberWallet])
+          .rpc();
+        assert.ok(false);
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
+          "InactivePlan"
+        );
+      }
+    })
+  
+    it("Cannot subscribe to sol inactive service", async () => {
+      // create service
+      const serviceId = 5;
+      const [service] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("service"),
+          serviceProvider.publicKey.toBuffer(),
+          new anchor.BN(serviceId).toBuffer("le", 8),
+        ],
+        program.programId
+      );
+      const planInfos = [
+        {
+          chargeAmount: new anchor.BN(1 * web3.LAMPORTS_PER_SOL),
+          interval: new anchor.BN(3600), // 3600 seconds,
+          tokenMint: null, // represents sol,
+          recipient: providerVault, // recipient is the provider's vault
+        }
+      ]
+      await createService(
+        connection,
+        program,
+        serviceProvider,
+        providerVault,
+        service,
+        serviceId,
+        planInfos
+      )
+      // deactivate service
+      const deactivateAccounts = {
+        feePayer: anchor.getProvider().publicKey,
+        owner: serviceProvider.publicKey,
+        service,
+      };
+      const sig = await program.methods.serviceStatusUpdate(new anchor.BN(serviceId), false)
+        .accounts({...deactivateAccounts})
+        .signers([serviceProvider])
+        .rpc()
+      await confirm(connection, sig);
+      const [subscriptionKey, ] = web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("aeon"),
+          Buffer.from("subscription"),
+          subscriberWallet.publicKey.toBuffer(),
+          service.toBuffer(),
+        ],
+        program.programId
+      );
+      const accounts = {
+        feePayer,
+        subscriber: subscriberWallet.publicKey,
+        subscriberVault,
+        serviceProvider: serviceProvider.publicKey,
+        service,
+        recipient: subscriberWallet.publicKey,
+        subscription: subscriptionKey
+      };
+      try {
+        await program.methods.subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+          .accounts({...accounts})
+          .signers([subscriberWallet])
+          .rpc();
+        assert.ok(false);
+      } catch (error) {
+        expect((error as anchor.AnchorError).error.errorCode.code).to.equals(
+          "InactiveService"
+        );
+      }
+    })
   })
+  
 
   // Need a service with two plans (plan 1 in sol, plan 2 in another token created)
   // Need a user to subscribe to the sol plan
