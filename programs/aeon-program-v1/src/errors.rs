@@ -16,6 +16,6 @@ pub enum Error {
     InactivePlan,
     #[msg("Insufficient balance for subscription")]
     InsufficientVaultBalance,
-    #[msg("Operation not allowed")]
-    OperationNotAllowed
+    #[msg("Subscription recipient mismatch")]
+    RecipientMismatch
 }
