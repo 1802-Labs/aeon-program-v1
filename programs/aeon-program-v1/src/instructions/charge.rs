@@ -22,6 +22,7 @@ pub struct ChargeSOL<'info> {
     )]
     pub subscriber_vault: Account<'info, Vault>,
     /// CHECK: Verification already done in the perform-create handler
+    #[account(mut)]
     pub recipient: UncheckedAccount<'info>,
     pub service_provider: SystemAccount<'info>,
     #[account(

@@ -142,3 +142,32 @@ impl<'info> SubscribeToken<'info> {
         Ok(())
     }
 }
+
+#[derive(Accounts)]
+#[instruction(_service_id: u64)]
+pub struct UnSubscribe<'info> {
+    #[account(mut)]
+    pub fee_payer: Signer<'info>,
+    #[account(mut)]
+    pub subscriber: Signer<'info>,
+    pub service_provider: SystemAccount<'info>,
+    #[account(
+        seeds = [SEED_PREFIX, SERVICE_SEED, service_provider.key().as_ref(), &_service_id.to_le_bytes()],
+        bump = service.bump
+    )]
+    pub service: Account<'info, Service>,
+    #[account(
+        mut,
+        seeds = [SEED_PREFIX, SUBSCRIPTION_SEED, subscriber.key().as_ref(), service.key().as_ref()],
+        bump
+    )]
+    pub subscription: Account<'info, Subscription>
+}
+
+impl<'info> UnSubscribe<'info> {
+    pub fn perform_unsubscribe(ctx: Context<Self>, _service_id: u64) -> Result<()> {
+        let subscription = &mut ctx.accounts.subscription;
+        subscription.is_active = false;
+        Ok(())
+    }
+}

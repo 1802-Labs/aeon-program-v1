@@ -60,7 +60,8 @@
           }
         },
         {
-          "name": "recipient"
+          "name": "recipient",
+          "writable": true
         },
         {
           "name": "service_provider"
@@ -807,6 +808,118 @@
         },
         {
           "name": "plan_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "unsubscribe",
+      "discriminator": [
+        12,
+        90,
+        197,
+        207,
+        214,
+        187,
+        199,
+        198
+      ],
+      "accounts": [
+        {
+          "name": "fee_payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subscriber",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "service_provider"
+        },
+        {
+          "name": "service",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  114,
+                  118,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "service_provider"
+              },
+              {
+                "kind": "arg",
+                "path": "_service_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subscription",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              },
+              {
+                "kind": "account",
+                "path": "service"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "service_id",
           "type": "u64"
         }
       ]

@@ -74,7 +74,8 @@ export const createVault = async (
   program: anchor.Program<AeonProgram>,
   owner: web3.Keypair,
   vaultKey: web3.PublicKey,
-  initAmount: number
+  initAmount: number,
+  doConfirm = true
 ) => {
   const accounts = {
     feePayer: anchor.getProvider().publicKey,
@@ -86,7 +87,9 @@ export const createVault = async (
     .accounts({ ...accounts })
     .signers([owner])
     .rpc();
-  await confirm(connection, sig);
+  if (doConfirm) {
+    await confirm(connection, sig);
+  }
 };
 
 export const createService = async (
@@ -96,7 +99,8 @@ export const createService = async (
   vaultKey: web3.PublicKey,
   serviceKey: web3.PublicKey,
   id: number,
-  plans: PlanInfo[]
+  plans: PlanInfo[],
+  doConfirm = true
 ) => {
   const accounts = {
     feePayer: anchor.getProvider().publicKey,
@@ -109,5 +113,7 @@ export const createService = async (
     .accounts({ ...accounts })
     .signers([owner])
     .rpc();
-  await confirm(connection, sig);
+  if (doConfirm) {
+    await confirm(connection, sig);
+  }
 };

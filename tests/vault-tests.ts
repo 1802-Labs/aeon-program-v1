@@ -12,13 +12,17 @@ import {
   mintTo,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
-import { confirm, transferSOLToVault, transferTokenToVault, createVault } from './utils';
+import {
+  confirm,
+  transferSOLToVault,
+  transferTokenToVault,
+  createVault,
+} from "./utils";
 
 describe("Aeon Vault Tests", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const connection = anchor.getProvider().connection;
-  const program = anchor.workspace
-    .AeonProgram as Program<AeonProgram>;
+  const program = anchor.workspace.AeonProgram as Program<AeonProgram>;
   const user1Wallet = new web3.Keypair();
   const user2Wallet = new web3.Keypair();
   const serviceProvider = new web3.Keypair();

@@ -3,13 +3,12 @@ import { web3 } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { AeonProgram } from "../target/types/aeon_program";
 import { assert, expect } from "chai";
-import { confirm, createVault, createService } from './utils';
+import { confirm, createVault, createService } from "./utils";
 
 describe("Aeon Service/Plan Tests", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const connection = anchor.getProvider().connection;
-  const program = anchor.workspace
-    .AeonProgram as Program<AeonProgram>;
+  const program = anchor.workspace.AeonProgram as Program<AeonProgram>;
   const user1Wallet = new web3.Keypair();
   const serviceProvider = new web3.Keypair();
   const tokenMinter = new web3.Keypair();
