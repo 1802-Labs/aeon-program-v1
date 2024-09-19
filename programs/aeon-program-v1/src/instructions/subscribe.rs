@@ -62,6 +62,7 @@ impl<'info> SubscribeSOL<'info> {
         subscription.service_key = service.key();
         subscription.owner = ctx.accounts.subscriber.key();
         subscription.last_charge_ts = Clock::get().unwrap().unix_timestamp as u64;
+        subscription.next_charge_ts = subscription.last_charge_ts + plan.interval;
         subscription.bump = ctx.bumps.subscription;
         Ok(())
     }
@@ -136,6 +137,7 @@ impl<'info> SubscribeToken<'info> {
         subscription.service_key = service.key();
         subscription.owner = ctx.accounts.subscriber.key();
         subscription.last_charge_ts = Clock::get().unwrap().unix_timestamp as u64;
+        subscription.next_charge_ts = subscription.last_charge_ts + plan.interval;
         subscription.bump = ctx.bumps.subscription;
         Ok(())
     }

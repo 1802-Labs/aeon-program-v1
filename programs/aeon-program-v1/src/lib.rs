@@ -47,4 +47,8 @@ pub mod aeon_program {
     pub fn subscribe_token(ctx: Context<SubscribeToken>, service_id: u64, plan_id: u64) -> Result<()> {
         SubscribeToken::perform_subscribe(ctx, service_id, plan_id)
     }
+
+    pub fn charge_sol(ctx: Context<ChargeSOL>, service_id: u64) -> Result<()> {
+        ChargeSOL::perform_charge(ctx, service_id)
+    }
 }

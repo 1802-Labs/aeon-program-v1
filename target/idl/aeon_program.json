@@ -8,6 +8,150 @@
   },
   "instructions": [
     {
+      "name": "charge_sol",
+      "discriminator": [
+        22,
+        21,
+        10,
+        34,
+        146,
+        28,
+        3,
+        233
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subscriber"
+        },
+        {
+          "name": "subscriber_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recipient"
+        },
+        {
+          "name": "service_provider"
+        },
+        {
+          "name": "service",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  114,
+                  118,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "service_provider"
+              },
+              {
+                "kind": "arg",
+                "path": "_service_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subscription",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              },
+              {
+                "kind": "account",
+                "path": "service"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "service_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "plan_add",
       "discriminator": [
         210,
@@ -959,13 +1103,23 @@
     },
     {
       "code": 6006,
+      "name": "InactiveSubscription",
+      "msg": "Subscription is not active"
+    },
+    {
+      "code": 6007,
       "name": "InsufficientVaultBalance",
       "msg": "Insufficient balance for subscription"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "RecipientMismatch",
       "msg": "Subscription recipient mismatch"
+    },
+    {
+      "code": 6009,
+      "name": "NextChargeTsNotReached",
+      "msg": "Next charge ts not reached"
     }
   ],
   "types": [
@@ -1090,6 +1244,10 @@
           },
           {
             "name": "last_charge_ts",
+            "type": "u64"
+          },
+          {
+            "name": "next_charge_ts",
             "type": "u64"
           },
           {

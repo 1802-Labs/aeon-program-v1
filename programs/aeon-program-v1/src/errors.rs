@@ -14,8 +14,12 @@ pub enum Error {
     InactiveService,
     #[msg("Plan is not active")]
     InactivePlan,
+    #[msg("Subscription is not active")]
+    InactiveSubscription,
     #[msg("Insufficient balance for subscription")]
     InsufficientVaultBalance,
     #[msg("Subscription recipient mismatch")]
-    RecipientMismatch
+    RecipientMismatch,
+    #[msg("Next charge ts not reached")]
+    NextChargeTsNotReached
 }

@@ -6,6 +6,7 @@ pub struct Subscription {
     pub owner: Pubkey,
     pub plan_id: u64,
     pub last_charge_ts: u64,
+    pub next_charge_ts: u64,
     pub is_active: bool,
     pub bump: u8
 }
@@ -16,6 +17,7 @@ impl Subscription {
         32 + // owner
         8  + // plan_id
         8  + // last_charge_ts
+        8  + // next_charge_ts
         1  + // is_active
         1;   // bump
 }

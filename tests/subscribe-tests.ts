@@ -176,6 +176,7 @@ describe("Subscription Tests", () => {
       expect(initialVaultBalance - finalVaultBalance).to.equals(plan.chargeAmount.toNumber());
       expect(finalRecipientBalance - initialRecipientBalance).to.equals(plan.chargeAmount.toNumber());
       expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.nextChargeTs.toNumber()).to.equals(subscriptionInfo.lastChargeTs.toNumber() + plan.interval.toNumber());
       expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
       expect(subscriptionInfo.planId.toNumber()).to.equals(1);
       expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
@@ -246,6 +247,7 @@ describe("Subscription Tests", () => {
       expect(initialVaultBalance - finalVaultBalance).to.equals(plan.chargeAmount.toNumber());
       expect(finalRecipientBalance - initialRecipientBalance).to.equals(plan.chargeAmount.toNumber());
       expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.nextChargeTs.toNumber()).to.equals(subscriptionInfo.lastChargeTs.toNumber() + plan.interval.toNumber());
       expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
       expect(subscriptionInfo.planId.toNumber()).to.equals(1);
       expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
@@ -532,6 +534,7 @@ describe("Subscription Tests", () => {
       expect((initialVaultAtaBalance - finalVaultAtaBalance).toString()).to.equals(plan.chargeAmount.toString());
       expect((finalRecipientBalance - initialRecipientBalance).toString()).to.equals(plan.chargeAmount.toString());
       expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.nextChargeTs.toNumber()).to.equals(subscriptionInfo.lastChargeTs.toNumber() + plan.interval.toNumber());
       expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
       expect(subscriptionInfo.planId.toNumber()).to.equals(1);
       expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
@@ -610,6 +613,7 @@ describe("Subscription Tests", () => {
       expect((initialVaultAtaBalance - finalVaultAtaBalance).toString()).to.equals(plan.chargeAmount.toString());
       expect((finalRecipientBalance - initialRecipientBalance).toString()).to.equals(plan.chargeAmount.toString());
       expect(subscriptionInfo.lastChargeTs.toNumber()).to.greaterThan(1000);
+      expect(subscriptionInfo.nextChargeTs.toNumber()).to.equals(subscriptionInfo.lastChargeTs.toNumber() + plan.interval.toNumber());
       expect(subscriptionInfo.owner.toString()).to.equals(subscriberWallet.publicKey.toString());
       expect(subscriptionInfo.planId.toNumber()).to.equals(1);
       expect(subscriptionInfo.serviceKey.toString()).to.equals(service.toString())
