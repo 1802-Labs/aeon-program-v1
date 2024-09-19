@@ -153,6 +153,162 @@
       ]
     },
     {
+      "name": "charge_token",
+      "discriminator": [
+        70,
+        32,
+        114,
+        181,
+        234,
+        250,
+        229,
+        75
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subscriber"
+        },
+        {
+          "name": "subscriber_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subscriber_vault_ata",
+          "writable": true
+        },
+        {
+          "name": "recipient",
+          "writable": true
+        },
+        {
+          "name": "service_provider"
+        },
+        {
+          "name": "service",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  114,
+                  118,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "service_provider"
+              },
+              {
+                "kind": "arg",
+                "path": "_service_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subscription",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  101,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscriber"
+              },
+              {
+                "kind": "account",
+                "path": "service"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "service_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "plan_add",
       "discriminator": [
         210,

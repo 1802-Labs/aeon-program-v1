@@ -52,6 +52,10 @@ pub mod aeon_program {
         ChargeSOL::perform_charge(ctx, service_id)
     }
 
+    pub fn charge_token(ctx: Context<ChargeToken>, service_id: u64) -> Result<()> {
+        ChargeToken::perform_charge(ctx, service_id)
+    }
+
     pub fn unsubscribe(ctx: Context<UnSubscribe>, service_id: u64) -> Result<()> {
         UnSubscribe::perform_unsubscribe(ctx, service_id)
     }
