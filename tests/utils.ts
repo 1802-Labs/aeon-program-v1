@@ -38,6 +38,7 @@ export const transferSOLToVault = async (
   txn.sign([from]);
   const sig = await connection.sendTransaction(txn, { maxRetries: 1 });
   await confirm(connection, sig);
+  return sig;
 };
 
 export const transferTokenToVault = async (
@@ -66,7 +67,7 @@ export const transferTokenToVault = async (
     amount * 10 ** decimals
   );
   await confirm(connection, sig);
-  return { sourceATA, destinationAta };
+  return { sourceATA, destinationAta, sig };
 };
 
 export const createVault = async (
@@ -90,6 +91,7 @@ export const createVault = async (
   if (doConfirm) {
     await confirm(connection, sig);
   }
+  return sig;
 };
 
 export const createService = async (

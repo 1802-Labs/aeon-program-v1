@@ -6,7 +6,7 @@ mod utils;
 use instructions::*;
 use anchor_lang::prelude::*;
 
-declare_id!("6LvWxo7kqwNFQzWAFqRJHkwLriPj6x5wnNNMvCm8GX9");
+declare_id!("EvLqTE2QVj5TLTz6257ApiUxfu4tc7GHNDYCgN4hQv2c");
 
 #[program]
 pub mod aeon_program {

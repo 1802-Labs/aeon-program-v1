@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-aeon_program_v1 = "6LvWxo7kqwNFQzWAFqRJHkwLriPj6x5wnNNMvCm8GX9"
+aeon_program_v1 = "EvLqTE2QVj5TLTz6257ApiUxfu4tc7GHNDYCgN4hQv2c"
 
 [registry]
 url = "https://api.apr.dev"
@@ -15,5 +15,10 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-# test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/vault-tests.ts tests/service-tests.ts tests/subscribe-tests.ts tests/charge-tests.ts"
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/charge-tests.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/vault-tests.ts tests/service-tests.ts tests/subscribe-tests.ts tests/charge-tests.ts"
+# test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/charge-tests.ts"
+generate_vault_txns = "ts-node scripts/vault.ts"
+mint_txns = "ts-node scripts/mint.ts"
+
+[workspace]
+types = "scripts/idl"

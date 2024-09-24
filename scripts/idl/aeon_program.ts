@@ -1,14 +1,20 @@
-{
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/aeon_program.json`.
+ */
+export type AeonProgram = {
   "address": "EvLqTE2QVj5TLTz6257ApiUxfu4tc7GHNDYCgN4hQv2c",
   "metadata": {
-    "name": "aeon_program",
+    "name": "aeonProgram",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
   "instructions": [
     {
-      "name": "charge_sol",
+      "name": "chargeSol",
       "discriminator": [
         22,
         21,
@@ -29,7 +35,7 @@
           "name": "subscriber"
         },
         {
-          "name": "subscriber_vault",
+          "name": "subscriberVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -64,7 +70,7 @@
           "writable": true
         },
         {
-          "name": "service_provider"
+          "name": "serviceProvider"
         },
         {
           "name": "service",
@@ -93,11 +99,11 @@
               },
               {
                 "kind": "account",
-                "path": "service_provider"
+                "path": "serviceProvider"
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
@@ -147,13 +153,13 @@
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "charge_token",
+      "name": "chargeToken",
       "discriminator": [
         70,
         32,
@@ -174,7 +180,7 @@
           "name": "subscriber"
         },
         {
-          "name": "subscriber_vault",
+          "name": "subscriberVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -205,7 +211,7 @@
           }
         },
         {
-          "name": "subscriber_vault_ata",
+          "name": "subscriberVaultAta",
           "writable": true
         },
         {
@@ -213,7 +219,7 @@
           "writable": true
         },
         {
-          "name": "service_provider"
+          "name": "serviceProvider"
         },
         {
           "name": "service",
@@ -242,11 +248,11 @@
               },
               {
                 "kind": "account",
-                "path": "service_provider"
+                "path": "serviceProvider"
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
@@ -294,22 +300,22 @@
           }
         },
         {
-          "name": "token_mint"
+          "name": "tokenMint"
         },
         {
-          "name": "token_program",
+          "name": "tokenProgram",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "plan_add",
+      "name": "planAdd",
       "discriminator": [
         210,
         145,
@@ -322,7 +328,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -363,33 +369,33 @@
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         },
         {
-          "name": "plan_info",
+          "name": "planInfo",
           "type": {
             "defined": {
-              "name": "PlanInfo"
+              "name": "planInfo"
             }
           }
         }
       ]
     },
     {
-      "name": "plan_status_update",
+      "name": "planStatusUpdate",
       "discriminator": [
         12,
         170,
@@ -402,7 +408,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -443,7 +449,7 @@
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
@@ -451,21 +457,21 @@
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         },
         {
-          "name": "plan_id",
+          "name": "planId",
           "type": "u64"
         },
         {
-          "name": "is_active",
+          "name": "isActive",
           "type": "bool"
         }
       ]
     },
     {
-      "name": "service_create",
+      "name": "serviceCreate",
       "discriminator": [
         7,
         33,
@@ -478,7 +484,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -555,7 +561,7 @@
           }
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -565,11 +571,11 @@
           "type": "u64"
         },
         {
-          "name": "plan_infos",
+          "name": "planInfos",
           "type": {
             "vec": {
               "defined": {
-                "name": "PlanInfo"
+                "name": "planInfo"
               }
             }
           }
@@ -577,7 +583,7 @@
       ]
     },
     {
-      "name": "service_status_update",
+      "name": "serviceStatusUpdate",
       "discriminator": [
         125,
         110,
@@ -590,7 +596,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -631,7 +637,7 @@
               },
               {
                 "kind": "arg",
-                "path": "_id"
+                "path": "id"
               }
             ]
           }
@@ -643,13 +649,13 @@
           "type": "u64"
         },
         {
-          "name": "is_active",
+          "name": "isActive",
           "type": "bool"
         }
       ]
     },
     {
-      "name": "subscribe_sol",
+      "name": "subscribeSol",
       "discriminator": [
         162,
         188,
@@ -662,7 +668,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -672,7 +678,7 @@
           "signer": true
         },
         {
-          "name": "subscriber_vault",
+          "name": "subscriberVault",
           "writable": true,
           "pda": {
             "seeds": [
@@ -703,7 +709,7 @@
           }
         },
         {
-          "name": "service_provider"
+          "name": "serviceProvider"
         },
         {
           "name": "service",
@@ -732,11 +738,11 @@
               },
               {
                 "kind": "account",
-                "path": "service_provider"
+                "path": "serviceProvider"
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
@@ -788,23 +794,23 @@
           }
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         },
         {
-          "name": "plan_id",
+          "name": "planId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "subscribe_token",
+      "name": "subscribeToken",
       "discriminator": [
         244,
         137,
@@ -817,7 +823,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -827,7 +833,7 @@
           "signer": true
         },
         {
-          "name": "subscriber_vault",
+          "name": "subscriberVault",
           "pda": {
             "seeds": [
               {
@@ -857,11 +863,11 @@
           }
         },
         {
-          "name": "subscriber_vault_ata",
+          "name": "subscriberVaultAta",
           "writable": true
         },
         {
-          "name": "service_provider"
+          "name": "serviceProvider"
         },
         {
           "name": "service",
@@ -890,17 +896,17 @@
               },
               {
                 "kind": "account",
-                "path": "service_provider"
+                "path": "serviceProvider"
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
         },
         {
-          "name": "token_mint"
+          "name": "tokenMint"
         },
         {
           "name": "recipient",
@@ -949,21 +955,21 @@
           }
         },
         {
-          "name": "token_program",
+          "name": "tokenProgram",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         },
         {
-          "name": "plan_id",
+          "name": "planId",
           "type": "u64"
         }
       ]
@@ -982,7 +988,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -992,7 +998,7 @@
           "signer": true
         },
         {
-          "name": "service_provider"
+          "name": "serviceProvider"
         },
         {
           "name": "service",
@@ -1021,11 +1027,11 @@
               },
               {
                 "kind": "account",
-                "path": "service_provider"
+                "path": "serviceProvider"
               },
               {
                 "kind": "arg",
-                "path": "_service_id"
+                "path": "serviceId"
               }
             ]
           }
@@ -1075,13 +1081,13 @@
       ],
       "args": [
         {
-          "name": "service_id",
+          "name": "serviceId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "vault_create",
+      "name": "vaultCreate",
       "discriminator": [
         109,
         191,
@@ -1094,7 +1100,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -1135,19 +1141,19 @@
           }
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "init_balance",
+          "name": "initBalance",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "vault_withdraw_sol",
+      "name": "vaultWithdrawSol",
       "discriminator": [
         49,
         168,
@@ -1160,7 +1166,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -1205,7 +1211,7 @@
           "writable": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -1217,7 +1223,7 @@
       ]
     },
     {
-      "name": "vault_withdraw_token",
+      "name": "vaultWithdrawToken",
       "discriminator": [
         117,
         156,
@@ -1230,7 +1236,7 @@
       ],
       "accounts": [
         {
-          "name": "fee_payer",
+          "name": "feePayer",
           "writable": true,
           "signer": true
         },
@@ -1271,22 +1277,22 @@
           }
         },
         {
-          "name": "token_mint"
+          "name": "tokenMint"
         },
         {
-          "name": "vault_ata",
+          "name": "vaultAta",
           "writable": true
         },
         {
-          "name": "destination_ata",
+          "name": "destinationAta",
           "writable": true
         },
         {
-          "name": "token_program",
+          "name": "tokenProgram",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -1300,7 +1306,7 @@
   ],
   "accounts": [
     {
-      "name": "Service",
+      "name": "service",
       "discriminator": [
         144,
         62,
@@ -1313,7 +1319,7 @@
       ]
     },
     {
-      "name": "Subscription",
+      "name": "subscription",
       "discriminator": [
         64,
         7,
@@ -1326,7 +1332,7 @@
       ]
     },
     {
-      "name": "Vault",
+      "name": "vault",
       "discriminator": [
         211,
         8,
@@ -1342,58 +1348,58 @@
   "errors": [
     {
       "code": 6000,
-      "name": "VaultRentExemptError",
+      "name": "vaultRentExemptError",
       "msg": "Vault lamports cannot go below minimum rent"
     },
     {
       "code": 6001,
-      "name": "ATANotOwnedByVault",
+      "name": "ataNotOwnedByVault",
       "msg": "The specified vault token account is not owned by the owner vault"
     },
     {
       "code": 6002,
-      "name": "InvalidArgument",
+      "name": "invalidArgument",
       "msg": "Invalid argument"
     },
     {
       "code": 6003,
-      "name": "PlanNotFound",
+      "name": "planNotFound",
       "msg": "Plan not found"
     },
     {
       "code": 6004,
-      "name": "InactiveService",
+      "name": "inactiveService",
       "msg": "Service is not active"
     },
     {
       "code": 6005,
-      "name": "InactivePlan",
+      "name": "inactivePlan",
       "msg": "Plan is not active"
     },
     {
       "code": 6006,
-      "name": "InactiveSubscription",
+      "name": "inactiveSubscription",
       "msg": "Subscription is not active"
     },
     {
       "code": 6007,
-      "name": "InsufficientVaultBalance",
+      "name": "insufficientVaultBalance",
       "msg": "Insufficient balance for subscription"
     },
     {
       "code": 6008,
-      "name": "RecipientMismatch",
+      "name": "recipientMismatch",
       "msg": "Subscription recipient mismatch"
     },
     {
       "code": 6009,
-      "name": "NextChargeTsNotReached",
+      "name": "nextChargeTsNotReached",
       "msg": "Next charge ts not reached"
     }
   ],
   "types": [
     {
-      "name": "Plan",
+      "name": "plan",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1402,11 +1408,11 @@
             "type": "u64"
           },
           {
-            "name": "charge_amount",
+            "name": "chargeAmount",
             "type": "u64"
           },
           {
-            "name": "created_at",
+            "name": "createdAt",
             "type": "u64"
           },
           {
@@ -1414,7 +1420,7 @@
             "type": "u64"
           },
           {
-            "name": "token_mint",
+            "name": "tokenMint",
             "type": {
               "option": "pubkey"
             }
@@ -1424,19 +1430,19 @@
             "type": "pubkey"
           },
           {
-            "name": "is_active",
+            "name": "isActive",
             "type": "bool"
           }
         ]
       }
     },
     {
-      "name": "PlanInfo",
+      "name": "planInfo",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "charge_amount",
+            "name": "chargeAmount",
             "type": "u64"
           },
           {
@@ -1444,7 +1450,7 @@
             "type": "u64"
           },
           {
-            "name": "token_mint",
+            "name": "tokenMint",
             "type": {
               "option": "pubkey"
             }
@@ -1457,7 +1463,7 @@
       }
     },
     {
-      "name": "Service",
+      "name": "service",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1466,15 +1472,15 @@
             "type": "u64"
           },
           {
-            "name": "created_at",
+            "name": "createdAt",
             "type": "u64"
           },
           {
-            "name": "created_by",
+            "name": "createdBy",
             "type": "pubkey"
           },
           {
-            "name": "is_active",
+            "name": "isActive",
             "type": "bool"
           },
           {
@@ -1486,7 +1492,7 @@
             "type": {
               "vec": {
                 "defined": {
-                  "name": "Plan"
+                  "name": "plan"
                 }
               }
             }
@@ -1495,12 +1501,12 @@
       }
     },
     {
-      "name": "Subscription",
+      "name": "subscription",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "service_key",
+            "name": "serviceKey",
             "type": "pubkey"
           },
           {
@@ -1508,19 +1514,19 @@
             "type": "pubkey"
           },
           {
-            "name": "plan_id",
+            "name": "planId",
             "type": "u64"
           },
           {
-            "name": "last_charge_ts",
+            "name": "lastChargeTs",
             "type": "u64"
           },
           {
-            "name": "next_charge_ts",
+            "name": "nextChargeTs",
             "type": "u64"
           },
           {
-            "name": "is_active",
+            "name": "isActive",
             "type": "bool"
           },
           {
@@ -1531,7 +1537,7 @@
       }
     },
     {
-      "name": "Vault",
+      "name": "vault",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1547,4 +1553,4 @@
       }
     }
   ]
-}
+};

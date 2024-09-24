@@ -54,14 +54,9 @@ describe("Charge Tests", () => {
     serviceProvider.publicKey,
     true
   );
-  const providerAta = getAssociatedTokenAddressSync(
-    mintKeyPair.publicKey,
-    serviceProvider.publicKey
-  );
 
   before(async () => {
     // write to mint and neccassary token accounts
-    // create tokenMint
     const mintData = Buffer.alloc(MINT_SIZE);
     MintLayout.encode(
       {
@@ -78,17 +73,11 @@ describe("Charge Tests", () => {
 
     // create token accounts for both vaults, and service provider wallet
     const providerTokenAccountData = Buffer.alloc(ACCOUNT_SIZE);
-    //const providerVaultTokenAccountData = Buffer.alloc(ACCOUNT_SIZE);
     const subscriberVaultTokenAccountData = Buffer.alloc(ACCOUNT_SIZE);
     const providerAta = await getAssociatedTokenAddress(
       mintKeyPair.publicKey,
       serviceProvider.publicKey
     );
-    // const providerVaultAta = await getAssociatedTokenAddress(
-    //   mintKeyPair.publicKey,
-    //   providerVault,
-    //   true
-    // );
     const subscriberVaultAta = await getAssociatedTokenAddress(
       mintKeyPair.publicKey,
       subscriberVault,
