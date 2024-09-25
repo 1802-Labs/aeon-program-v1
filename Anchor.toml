@@ -19,6 +19,7 @@ test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/vault-tests.ts tes
 # test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/charge-tests.ts"
 generate_vault_txns = "ts-node scripts/vault.ts"
 mint_txns = "ts-node scripts/mint.ts"
+service_txns = "ts-node scripts/service.ts"
 
 [workspace]
 types = "scripts/idl"

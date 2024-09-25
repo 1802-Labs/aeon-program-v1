@@ -118,4 +118,34 @@ export const createService = async (
   if (doConfirm) {
     await confirm(connection, sig);
   }
+  return sig;
+};
+
+export const createServiceWithMemo = async (
+  connection: web3.Connection,
+  program: anchor.Program<AeonProgram>,
+  owner: web3.Keypair,
+  vaultKey: web3.PublicKey,
+  serviceKey: web3.PublicKey,
+  id: number,
+  plans: PlanInfo[],
+  memoIx: web3.TransactionInstruction,
+  doConfirm = true
+) => {
+  const accounts = {
+    feePayer: anchor.getProvider().publicKey,
+    owner: owner.publicKey,
+    vault: vaultKey,
+    service: serviceKey,
+  };
+  const sig = await program.methods
+    .serviceCreate(new anchor.BN(id), plans)
+    .accounts({ ...accounts })
+    .signers([owner])
+    .preInstructions([memoIx])
+    .rpc();
+  if (doConfirm) {
+    await confirm(connection, sig);
+  }
+  return sig;
 };
