@@ -6,7 +6,7 @@ import { AeonProgram } from "../target/types/aeon_program";
 import { web3 } from "@coral-xyz/anchor";
 import { getKeypair } from "./shared";
 
-const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"));
 
 const userWallet = getKeypair("token-mint");
 const feePayer = getKeypair("subscriber");
@@ -29,6 +29,9 @@ const program = new Program(
 // 4. Send Transaction
 
 const main = async () => {
+  // const lutAddress = "Gr8rXuDwE2Vd2F5tifkPyMaUR67636YgrZEjkJf9RR9V";
+  // const lutData = await connection.getAddressLookupTable(new web3.PublicKey(lutAddress));
+  // console.log(lutData.value.state.addresses.map((addr) => addr.toBase58()))
   console.log("Started...");
 
   // create a example tx, alice transfer to bob and feePayer is `feePayer`
@@ -95,17 +98,17 @@ const main = async () => {
   console.log(decodedOwnerSig.equals(ownerSignature));
   //console.log(`Encoded Data String: ${encodedData}`);
   const decodedData = bs58.decode(encodedData);
-  console.log(decodedData.equals(realDataNeedToSign))
-  // {
-  //   let recoverTx = web3.Transaction.populate(web3.Message.from(decodedData));
-  //   recoverTx.addSignature(feePayer.publicKey, Buffer.from(feePayerSignature));
-  //   recoverTx.addSignature(userWallet.publicKey, Buffer.from(ownerSignature));
+  console.log(decodedData.equals(realDataNeedToSign));
+  {
+    let recoverTx = web3.Transaction.populate(web3.Message.from(decodedData));
+    recoverTx.addSignature(feePayer.publicKey, Buffer.from(feePayerSignature));
+    recoverTx.addSignature(userWallet.publicKey, Buffer.from(ownerSignature));
 
-  //   // 4. Send transaction
-  //   console.log(
-  //     `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`
-  //   );
-  // }
+    // 4. Send transaction
+    console.log(
+      `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`
+    );
+  }
 };
 
 main();
