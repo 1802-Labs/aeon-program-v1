@@ -129,7 +129,8 @@ export class AeonProgramClient {
     owner: string,
     serviceProvider: string,
     recipient: string,
-    serviceId: number
+    serviceId: number,
+    planId: number
   ) {
     const vaultOwnerKey = new web3.PublicKey(owner);
     const provider = new web3.PublicKey(serviceProvider);
@@ -167,7 +168,7 @@ export class AeonProgramClient {
       subscription: subscriptionKey,
     };
     const subIx = await this.program.methods
-      .subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+      .subscribeSol(new anchor.BN(serviceId), new anchor.BN(planId))
       .accounts({ ...accounts })
       .instruction()
 
