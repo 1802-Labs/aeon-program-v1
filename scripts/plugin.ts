@@ -1,3 +1,4 @@
+import * as anchor from "@coral-xyz/anchor";
 import { AeonProgram } from "./idl/aeon_program";
 import { Idl, web3 } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
@@ -124,8 +125,56 @@ export class AeonProgramClient {
     return tx
   }
 
-  async getSubscribeTransaction() {
-    
+  async getSubscribeTransaction(
+    owner: string,
+    serviceProvider: string,
+    recipient: string,
+    serviceId: number
+  ) {
+    const vaultOwnerKey = new web3.PublicKey(owner);
+    const provider = new web3.PublicKey(serviceProvider);
+    const [vaultKey] = web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("aeon"), Buffer.from("vault"), vaultOwnerKey.toBuffer()],
+      this.program.programId
+    );
+    const [service] = web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("aeon"),
+        Buffer.from("service"),
+        provider.toBuffer(),
+        new anchor.BN(serviceId).toBuffer("le", 8),
+      ],
+      this.program.programId
+    );
+    const [subscriptionKey] = web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("aeon"),
+        Buffer.from("subscription"),
+        vaultOwnerKey.toBuffer(),
+        service.toBuffer(),
+      ],
+      this.program.programId
+    );
+
+
+    const accounts = {
+      feePayer: this.feePayer,
+      subscriber: vaultOwnerKey,
+      subscriberVault: vaultKey,
+      serviceProvider,
+      service,
+      recipient: new web3.PublicKey(recipient),
+      subscription: subscriptionKey,
+    };
+    const subIx = await this.program.methods
+      .subscribeSol(new anchor.BN(serviceId), new anchor.BN(1))
+      .accounts({ ...accounts })
+      .instruction()
+
+    const tx = new web3.Transaction().add(subIx);
+    tx.recentBlockhash = (await this.connection.getLatestBlockhash()).blockhash;
+    tx.feePayer = this.feePayer;
+    return tx;
   }
 
   generateRandomId(randomBits: number = 48): bigint {
